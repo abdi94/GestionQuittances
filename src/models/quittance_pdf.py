@@ -100,15 +100,39 @@ class QuittancePDF:
         story.append(Spacer(1, 20))
 
     def _ajouter_informations_bailleur(self, story):
-        story.append(Paragraph("BAILLEUR :", self.styles["NormalCustom"]))
-        story.append(Paragraph(self.quittance.bailleur.nom, self.styles["NormalCustom"]))
-        story.append(Paragraph(self.quittance.bailleur.adresse_complete(), self.styles["NormalCustom"]))
+        # Créer un tableau pour encadrer les informations
+        data = [
+            [Paragraph("BAILLEUR :", self.styles["NormalCustom"])],
+            [Paragraph(self.quittance.bailleur.nom, self.styles["NormalCustom"])],
+            [Paragraph(self.quittance.bailleur.adresse_complete(), self.styles["NormalCustom"])]
+        ]
+        table = Table(data, colWidths=[16*cm])
+        table.setStyle(TableStyle([
+            ('BOX', (0, 0), (-1, -1), 1, colors.black),
+            ('TOPPADDING', (0, 0), (-1, -1), 6),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+            ('LEFTPADDING', (0, 0), (-1, -1), 10),
+            ('RIGHTPADDING', (0, 0), (-1, -1), 10),
+        ]))
+        story.append(table)
         story.append(Spacer(1, 20))
 
     def _ajouter_informations_locataire(self, story):
-        story.append(Paragraph("LOCATAIRE :", self.styles["NormalCustom"]))
-        story.append(Paragraph(self.quittance.locataire.nom_complet(), self.styles["NormalCustom"]))
-        story.append(Paragraph(self.quittance.locataire.adresse_complete(), self.styles["NormalCustom"]))
+        # Créer un tableau pour encadrer les informations
+        data = [
+            [Paragraph("LOCATAIRE :", self.styles["NormalCustom"])],
+            [Paragraph(self.quittance.locataire.nom_complet(), self.styles["NormalCustom"])],
+            [Paragraph(self.quittance.locataire.adresse_complete(), self.styles["NormalCustom"])]
+        ]
+        table = Table(data, colWidths=[16*cm])
+        table.setStyle(TableStyle([
+            ('BOX', (0, 0), (-1, -1), 1, colors.black),
+            ('TOPPADDING', (0, 0), (-1, -1), 6),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+            ('LEFTPADDING', (0, 0), (-1, -1), 10),
+            ('RIGHTPADDING', (0, 0), (-1, -1), 10),
+        ]))
+        story.append(table)
         story.append(Spacer(1, 20))
 
     def _ajouter_montants(self, story):
@@ -143,19 +167,19 @@ class QuittancePDF:
         ))
         story.append(Spacer(1, 20))
         
-        # Ajouter l'image de la signature si elle existe
+        # Ajouter d'abord le texte "Signature du bailleur"
+        story.append(Paragraph("Signature du bailleur", self.styles["Signature"]))
+        story.append(Spacer(1, 10))
+        
+        # Puis ajouter l'image de la signature si elle existe
         if os.path.exists(self.signature_path):
-            # Créer l'image avec une largeur de 2 pouces et hauteur proportionnelle
             signature = Image(self.signature_path)
-            signature.drawWidth = 2 * inch
-            signature.drawHeight = signature.drawWidth * signature.imageHeight / signature.imageWidth
+            signature.drawWidth = 1 * inch  
+            signature.drawHeight = 0.5 * inch  
             
-            # Centrer l'image
+            # Aligner à droite
             signature.hAlign = 'RIGHT'
             story.append(signature)
-            story.append(Spacer(1, 10))
-        
-        story.append(Paragraph("Signature du bailleur", self.styles["Signature"]))
 
     def _ajouter_mentions_legales(self, story):
         story.append(Paragraph(self.quittance.mentions_legales(), 
@@ -171,13 +195,14 @@ class QuittancePDF:
         # Construire le chemin complet du fichier
         chemin_complet = os.path.join(output_dir, chemin_fichier)
         
-        # Préparer le document
+        # Préparer le document avec des marges ajustées
+        # Réduire la marge supérieure de 2cm (72 points = 1 pouce ≈ 2.54cm)
         doc = SimpleDocTemplate(
             chemin_complet,
             pagesize=A4,
             rightMargin=72,
             leftMargin=72,
-            topMargin=72,
+            topMargin=30,  # Réduit de 72 à 30 points (environ 2cm de moins)
             bottomMargin=72
         )
 
