@@ -52,29 +52,21 @@ def ajouter_locataire(nom, prenom, adresse, code_postal, ville, date_debut, loye
 def generer_quittance(bailleur_id, locataire_id, mois, annee):
     """Générer une quittance de loyer"""
     try:
-        print("\nDébut de la génération de la quittance...")  # Debug
-        
         db = Database()
-        print(f"Recherche du bailleur {bailleur_id}...")  # Debug
         bailleur = db.get_bailleur(bailleur_id)
         if not bailleur:
             raise ValueError(f"Bailleur avec ID {bailleur_id} non trouvé")
-        print(f"Bailleur trouvé : {bailleur.nom}")  # Debug
             
-        print(f"Recherche du locataire {locataire_id}...")  # Debug
         locataire = db.get_locataire(locataire_id)
         if not locataire:
             raise ValueError(f"Locataire avec ID {locataire_id} non trouvé")
-        print(f"Locataire trouvé : {locataire.nom_complet()}")  # Debug
         
         debut = date(annee, mois, 1)
         if mois == 12:
             fin = date(annee + 1, 1, 1)
         else:
             fin = date(annee, mois + 1, 1)
-        print(f"Période : du {debut} au {fin}")  # Debug
         
-        print("Création de l'objet Quittance...")  # Debug
         quittance = Quittance(
             bailleur=bailleur,
             locataire=locataire,
@@ -82,20 +74,15 @@ def generer_quittance(bailleur_id, locataire_id, mois, annee):
             periode_fin=fin
         )
         
-        print("Création du PDF...")  # Debug
         pdf = QuittancePDF(quittance)
         nom_fichier = f"quittance_{quittance.numero}.pdf"
-        print(f"Nom du fichier : {nom_fichier}")  # Debug
         chemin_complet = pdf.generer(nom_fichier)
         
-        print("Sauvegarde en base de données...")  # Debug
         db.sauvegarder_quittance(quittance)
         click.echo(f"Quittance générée avec succès : {chemin_complet}")
         
     except Exception as e:
         click.echo(f"Erreur : {str(e)}", err=True)
-        import traceback
-        print(f"Traceback :\n{traceback.format_exc()}")  # Debug
         raise click.Abort()
 
 if __name__ == '__main__':

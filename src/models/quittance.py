@@ -23,7 +23,8 @@ class Quittance:
         self.numero = numero or self._generer_numero()
 
     def _generer_numero(self):
-        return f"Q{self.periode_debut.strftime('%Y%m')}"
+        """Génère un numéro de quittance au format YYYYMM"""
+        return f"{self.periode_debut.year}{self.periode_debut.month:02d}"
 
     def montant_total(self):
         return self.locataire.loyer_total()
