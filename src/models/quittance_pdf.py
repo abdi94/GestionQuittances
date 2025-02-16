@@ -7,6 +7,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from datetime import date
 import locale
+import os
 
 class QuittancePDF:
     def __init__(self, quittance):
@@ -119,9 +120,11 @@ class QuittancePDF:
         story.append(Spacer(1, 30))
 
     def _ajouter_signature(self, story):
-        date_str = self.quittance.date_emission.strftime("%d %B %Y")
-        story.append(Paragraph(f"Fait à {self.quittance.bailleur.ville}, le {date_str}", 
-                             self.styles["Signature"]))
+        date_str = self._formater_date(self.quittance.date_emission)
+        story.append(Paragraph(
+            f"Fait à {self.quittance.bailleur.ville}, le {date_str}", 
+            self.styles["Signature"]
+        ))
         story.append(Spacer(1, 40))
         story.append(Paragraph("Signature du bailleur", self.styles["Signature"]))
 
@@ -130,8 +133,28 @@ class QuittancePDF:
                              self.styles["MentionsLegales"]))
 
     def generer(self, chemin_fichier):
+        """Génère le PDF de la quittance"""
+        print("\nDébut de la génération de la quittance...")  # Debug
+        
+        # Créer le répertoire de sortie s'il n'existe pas
+        output_dir = "quittances"
+        if not os.path.exists(output_dir):
+            print(f"Création du répertoire {output_dir}")  # Debug
+            os.makedirs(output_dir)
+        
+        # Construire le chemin complet du fichier
+        chemin_complet = os.path.join(output_dir, chemin_fichier)
+        print(f"Chemin du fichier PDF : {chemin_complet}")  # Debug
+        
+        # Vérifier les permissions du répertoire
+        print(f"Vérification des permissions sur {output_dir}")  # Debug
+        if not os.access(output_dir, os.W_OK):
+            raise ValueError(f"Pas de permission d'écriture dans le répertoire {output_dir}")
+        
+        # Préparer le document
+        print("Préparation du document PDF...")  # Debug
         doc = SimpleDocTemplate(
-            chemin_fichier,
+            chemin_complet,
             pagesize=A4,
             rightMargin=72,
             leftMargin=72,
@@ -139,15 +162,46 @@ class QuittancePDF:
             bottomMargin=72
         )
 
+        # Préparer le contenu
+        print("Préparation du contenu...")  # Debug
         story = []
-        self._ajouter_entete(story)
-        self._ajouter_numero_quittance(story)
-        self._ajouter_periode_location(story)
-        self._ajouter_informations_bailleur(story)
-        self._ajouter_informations_locataire(story)
-        self._ajouter_montants(story)
-        self._ajouter_texte_legal(story)
-        self._ajouter_signature(story)
-        self._ajouter_mentions_legales(story)
+        try:
+            print("Ajout de l'en-tête...")  # Debug
+            self._ajouter_entete(story)
+            print("Ajout du numéro de quittance...")  # Debug
+            self._ajouter_numero_quittance(story)
+            print("Ajout de la période...")  # Debug
+            self._ajouter_periode_location(story)
+            print("Ajout des informations du bailleur...")  # Debug
+            self._ajouter_informations_bailleur(story)
+            print("Ajout des informations du locataire...")  # Debug
+            self._ajouter_informations_locataire(story)
+            print("Ajout des montants...")  # Debug
+            self._ajouter_montants(story)
+            print("Ajout du texte légal...")  # Debug
+            self._ajouter_texte_legal(story)
+            print("Ajout de la signature...")  # Debug
+            self._ajouter_signature(story)
+            print("Ajout des mentions légales...")  # Debug
+            self._ajouter_mentions_legales(story)
+            
+            # Générer le PDF
+            print("\nConstruction finale du PDF...")  # Debug
+            doc.build(story)
+            print(f"PDF généré avec succès : {chemin_complet}")  # Debug
+            
+            # Vérifier que le fichier a bien été créé
+            if os.path.exists(chemin_complet):
+                print(f"Vérification : le fichier existe bien")  # Debug
+                print(f"Taille du fichier : {os.path.getsize(chemin_complet)} octets")  # Debug
+            else:
+                raise ValueError(f"Le fichier n'a pas été créé : {chemin_complet}")
+            
+            return chemin_complet
         
-        doc.build(story) 
+        except Exception as e:
+            print(f"\nERREUR lors de la génération du PDF : {str(e)}")  # Debug
+            print(f"Type d'erreur : {type(e)}")  # Debug
+            import traceback
+            print(f"Traceback :\n{traceback.format_exc()}")  # Debug
+            raise ValueError(f"Erreur lors de la génération du PDF : {str(e)}") 
