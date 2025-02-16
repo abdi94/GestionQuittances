@@ -85,17 +85,20 @@ class QuittancePDF:
 
     def _ajouter_entete(self, story):
         story.append(Paragraph("QUITTANCE DE LOYER", self.styles["Titre"]))
-        story.append(Paragraph(
-            f"Quittance n° {self.quittance.numero}",
-            self.styles["SousTitre"]
-        ))
 
     def _ajouter_periode_location(self, story):
-        debut = self._formater_date(self.quittance.periode_debut)
-        fin = self._formater_date(self.quittance.periode_fin)
+        # Obtenir seulement le mois et l'année
+        mois = [
+            'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+            'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'
+        ]
+        mois_str = mois[self.quittance.periode_debut.month - 1]
+        annee = self.quittance.periode_debut.year
+        
+        # Combiner le numéro de quittance et la période sur la même ligne
         story.append(Paragraph(
-            f"Pour le mois de {debut} à {fin}",
-            self.styles["NormalCustom"]
+            f"Quittance n° {self.quittance.numero} &nbsp;pour le mois de {mois_str} {annee}",
+            self.styles["SousTitre"]
         ))
         story.append(Spacer(1, 20))
 
