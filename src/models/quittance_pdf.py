@@ -100,39 +100,54 @@ class QuittancePDF:
         story.append(Spacer(1, 20))
 
     def _ajouter_informations_bailleur(self, story):
-        # Créer un tableau pour encadrer les informations
+        # Créer un tableau pour encadrer les informations avec largeur réduite
         data = [
             [Paragraph("BAILLEUR :", self.styles["NormalCustom"])],
             [Paragraph(self.quittance.bailleur.nom, self.styles["NormalCustom"])],
             [Paragraph(self.quittance.bailleur.adresse_complete(), self.styles["NormalCustom"])]
         ]
-        table = Table(data, colWidths=[16*cm])
+        table = Table(data, colWidths=[8*cm])  # Réduit de 16cm à 8cm
         table.setStyle(TableStyle([
             ('BOX', (0, 0), (-1, -1), 1, colors.black),
             ('TOPPADDING', (0, 0), (-1, -1), 6),
             ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
             ('LEFTPADDING', (0, 0), (-1, -1), 10),
             ('RIGHTPADDING', (0, 0), (-1, -1), 10),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),  # Aligner le contenu à gauche
         ]))
-        story.append(table)
+        
+        # Créer un conteneur pour aligner le tableau à gauche
+        container = Table([[table]], colWidths=[16*cm])
+        container.setStyle(TableStyle([
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),  # Aligner le tableau à gauche
+            ('LEFTPADDING', (0, 0), (-1, -1), 0),  # Supprimer le padding à gauche
+        ]))
+        
+        story.append(container)
         story.append(Spacer(1, 20))
 
     def _ajouter_informations_locataire(self, story):
-        # Créer un tableau pour encadrer les informations
+        # Créer un tableau pour encadrer les informations avec largeur réduite et décalage
         data = [
             [Paragraph("LOCATAIRE :", self.styles["NormalCustom"])],
             [Paragraph(self.quittance.locataire.nom_complet(), self.styles["NormalCustom"])],
             [Paragraph(self.quittance.locataire.adresse_complete(), self.styles["NormalCustom"])]
         ]
-        table = Table(data, colWidths=[16*cm])
-        table.setStyle(TableStyle([
-            ('BOX', (0, 0), (-1, -1), 1, colors.black),
-            ('TOPPADDING', (0, 0), (-1, -1), 6),
-            ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
-            ('LEFTPADDING', (0, 0), (-1, -1), 10),
-            ('RIGHTPADDING', (0, 0), (-1, -1), 10),
+        
+        # Créer un tableau avec une colonne vide pour le décalage et une colonne pour les données
+        table_with_offset = Table(
+            [[Spacer(1, 1), table] for table in data],
+            colWidths=[8*cm, 8*cm]  # Première colonne pour le décalage, deuxième pour les données
+        )
+        
+        table_with_offset.setStyle(TableStyle([
+            ('BOX', (1, 0), (1, -1), 1, colors.black),  # Bordure uniquement autour de la deuxième colonne
+            ('TOPPADDING', (1, 0), (1, -1), 6),
+            ('BOTTOMPADDING', (1, 0), (1, -1), 6),
+            ('LEFTPADDING', (1, 0), (1, -1), 10),
+            ('RIGHTPADDING', (1, 0), (1, -1), 10),
         ]))
-        story.append(table)
+        story.append(table_with_offset)
         story.append(Spacer(1, 20))
 
     def _ajouter_montants(self, story):
