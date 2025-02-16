@@ -136,6 +136,60 @@ class Database:
         conn.commit()
         return cursor.lastrowid
 
+    def lister_bailleurs(self):
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM bailleur')
+        return cursor.fetchall()
+
+    def lister_locataires(self):
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM locataire')
+        return cursor.fetchall()
+
+    def lister_quittances(self):
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT 
+                q.id,
+                q.numero,
+                q.bailleur_id,
+                q.locataire_id,
+                q.periode_debut,
+                q.periode_fin,
+                q.date_emission,
+                b.nom as bailleur_nom,
+                l.nom as locataire_nom,
+                l.prenom as locataire_prenom
+            FROM quittance q
+            LEFT JOIN bailleur b ON q.bailleur_id = b.id
+            LEFT JOIN locataire l ON q.locataire_id = l.id
+        ''')
+        return cursor.fetchall()
+
+    def vider_tables(self):
+        """Vide toutes les tables de la base de données"""
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        
+        # Désactiver les contraintes de clés étrangères temporairement
+        cursor.execute('PRAGMA foreign_keys = OFF')
+        
+        # Vider les tables dans l'ordre inverse des dépendances
+        cursor.execute('DELETE FROM quittance')
+        cursor.execute('DELETE FROM locataire')
+        cursor.execute('DELETE FROM bailleur')
+        
+        # Réinitialiser les compteurs d'ID
+        cursor.execute('DELETE FROM sqlite_sequence')
+        
+        # Réactiver les contraintes de clés étrangères
+        cursor.execute('PRAGMA foreign_keys = ON')
+        
+        conn.commit()
+
     def __enter__(self):
         return self
 
