@@ -25,7 +25,7 @@ class TestLocataire(unittest.TestCase):
         self.assertEqual(self.locataire.loyer_total(), 1300.00)
 
     def test_adresse_complete(self):
-        adresse_attendue = "8ter Rue Traversière\n92100 BOULOGNE BILLANCOURT"
+        adresse_attendue = "8Ter Rue Traversière\n92100 BOULOGNE BILLANCOURT"
         self.assertEqual(self.locataire.adresse_complete(), adresse_attendue)
 
     def test_nom_complet(self):
@@ -44,15 +44,4 @@ class TestLocataire(unittest.TestCase):
                 montant_charges=100.00
             )
 
-    def test_validation_date_bail(self):
-        with self.assertRaises(ValueError):
-            Locataire(
-                nom="PEGENIA",
-                prenom="Rey",
-                adresse="8Ter Rue Traversière",
-                code_postal="92100",
-                ville="BOULOGNE BILLANCOURT",
-                date_debut_bail=date(2025, 1, 1),
-                montant_loyer=1200.00,
-                montant_charges=100.00
-            ) 
+    

@@ -1,0 +1,2 @@
+[console_scripts]
+gestion-quittances = src.interface.cli:cli

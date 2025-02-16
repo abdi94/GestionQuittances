@@ -1,0 +1,15 @@
+Metadata-Version: 2.2
+Name: gestion-quittances
+Version: 0.1
+Summary: Application de génération de quittances de loyer
+Author-email: Votre Nom <votre.email@example.com>
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: End Users/Desktop
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Requires-Python: >=3.8
+Requires-Dist: click>=8.1.7
+Requires-Dist: reportlab>=4.1.0

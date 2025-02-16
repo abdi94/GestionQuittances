@@ -2,13 +2,18 @@ from datetime import date
 
 class Locataire:
     def __init__(self, nom, prenom, adresse, code_postal, ville, 
-                 date_debut_bail, montant_loyer, montant_charges):
+                 date_debut_bail, montant_loyer, montant_charges, id=None):
         if montant_loyer < 0 or montant_charges < 0:
             raise ValueError("Les montants ne peuvent pas être négatifs")
             
-        if date_debut_bail > date.today():
-            raise ValueError("La date de début du bail ne peut pas être dans le futur")
+        if not isinstance(date_debut_bail, date):
+            raise ValueError("La date de début du bail doit être une instance de date")
             
+        today = date.today()
+        if date_debut_bail > today:
+            raise ValueError(f"La date de début du bail ({date_debut_bail}) ne peut pas être dans le futur ({today})")
+            
+        self.id = id
         self.nom = nom
         self.prenom = prenom
         self.adresse = adresse

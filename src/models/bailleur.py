@@ -1,5 +1,6 @@
 class Bailleur:
-    def __init__(self, nom, adresse, code_postal, ville):
+    def __init__(self, nom, adresse, code_postal, ville, id=None):
+        self.id = id
         self.nom = nom
         self.adresse = adresse
         self.code_postal = code_postal

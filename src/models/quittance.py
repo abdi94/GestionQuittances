@@ -1,7 +1,14 @@
 from datetime import date
 
 class Quittance:
-    def __init__(self, bailleur, locataire, periode_debut, periode_fin):
+    MENTIONS_LEGALES = (
+        "Pour valoir ce que de droit.\n"
+        "Cette quittance annule tous les reçus qui auraient pu être établis précédemment "
+        "pour la même période.\n"
+        "La présente quittance est à conserver pendant 3 ans."
+    )
+
+    def __init__(self, bailleur, locataire, periode_debut, periode_fin, numero=None):
         if periode_debut > periode_fin:
             raise ValueError("La période de début doit être antérieure à la période de fin")
             
@@ -13,6 +20,10 @@ class Quittance:
         self.periode_debut = periode_debut
         self.periode_fin = periode_fin
         self.date_emission = date.today()
+        self.numero = numero or self._generer_numero()
+
+    def _generer_numero(self):
+        return f"Q{self.periode_debut.strftime('%Y%m')}"
 
     def montant_total(self):
         return self.locataire.loyer_total()
@@ -20,4 +31,16 @@ class Quittance:
     def periode_str(self):
         debut = self.periode_debut.strftime("%d %B %Y")
         fin = self.periode_fin.strftime("%d %B %Y")
-        return f"{debut} au {fin}" 
+        return f"{debut} au {fin}"
+
+    def mentions_legales(self):
+        return self.MENTIONS_LEGALES
+
+    def texte_legal(self):
+        return (
+            "Je soussigné(e) {}, propriétaire du logement désigné ci-dessus, "
+            "déclare avoir reçu la somme de {:.2f} euros, au titre du paiement "
+            "du loyer et des charges pour la période de location indiquée dans la "
+            "présente quittance.\n\n"
+            "{}"
+        ).format(self.bailleur.nom, self.montant_total(), self.mentions_legales()) 

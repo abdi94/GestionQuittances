@@ -1,0 +1,15 @@
+pyproject.toml
+setup.py
+gestion_quittances.egg-info/PKG-INFO
+gestion_quittances.egg-info/SOURCES.txt
+gestion_quittances.egg-info/dependency_links.txt
+gestion_quittances.egg-info/entry_points.txt
+gestion_quittances.egg-info/requires.txt
+gestion_quittances.egg-info/top_level.txt
+src/__init__.py
+tests/test_bailleur.py
+tests/test_cli.py
+tests/test_database.py
+tests/test_locataire.py
+tests/test_quittance.py
+tests/test_quittance_pdf.py
