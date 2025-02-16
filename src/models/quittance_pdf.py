@@ -13,12 +13,16 @@ class QuittancePDF:
         self.quittance = quittance
         self.styles = getSampleStyleSheet()
         try:
-            locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
-        except locale.Error:
-            try:
-                locale.setlocale(locale.LC_TIME, 'fra_fra')  # Pour Windows
-            except locale.Error:
-                pass  # Garder la locale par défaut si aucune n'est disponible
+            # Essayer différentes locales pour Windows et Linux
+            locales_to_try = ['fr_FR.UTF-8', 'fra_fra', 'fr_FR', 'fr']
+            for loc in locales_to_try:
+                try:
+                    locale.setlocale(locale.LC_TIME, loc)
+                    break
+                except locale.Error:
+                    continue
+        except:
+            pass  # Garder la locale par défaut si aucune n'est disponible
         self._setup_styles()
 
     def _setup_styles(self):
@@ -57,6 +61,14 @@ class QuittancePDF:
             textColor=colors.gray
         ))
 
+    def _formater_date(self, date_obj):
+        """Formate une date en français avec gestion de l'encodage"""
+        mois = [
+            'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+            'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'
+        ]
+        return f"{date_obj.day:02d} {mois[date_obj.month - 1]} {date_obj.year}"
+
     def _ajouter_entete(self, story):
         story.append(Paragraph("QUITTANCE DE LOYER", self.styles["Titre"]))
         story.append(Spacer(1, 20))
@@ -67,8 +79,12 @@ class QuittancePDF:
         story.append(Spacer(1, 20))
 
     def _ajouter_periode_location(self, story):
-        periode = self.quittance.periode_str()
-        story.append(Paragraph(f"Pour la période du {periode}", self.styles["NormalCustom"]))
+        debut = self._formater_date(self.quittance.periode_debut)
+        fin = self._formater_date(self.quittance.periode_fin)
+        story.append(Paragraph(
+            f"Pour la période du {debut} au {fin}",
+            self.styles["NormalCustom"]
+        ))
         story.append(Spacer(1, 20))
 
     def _ajouter_informations_bailleur(self, story):

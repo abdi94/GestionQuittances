@@ -26,8 +26,8 @@ def afficher_contenu_db():
         print("Aucune quittance enregistrée")
     else:
         for q in quittances:
-            print(f"ID: {q[0]}, N°: {q[1]}, Bailleur: {q[8]}, Locataire: {q[9]}")
-            print(f"  Période: {q[4]} au {q[5]}, Émise le: {q[6]}")
+            print(f"ID: {q[0]}, N°: {q[1]}, Bailleur: {q[7]}, Locataire: {q[8]} {q[9]}")
+            print(f"  Période: du {q[4]} au {q[5]}, Émise le: {q[6]}")
 
 def vider_base():
     db = Database()

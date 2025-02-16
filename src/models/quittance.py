@@ -29,8 +29,12 @@ class Quittance:
         return self.locataire.loyer_total()
 
     def periode_str(self):
-        debut = self.periode_debut.strftime("%d %B %Y")
-        fin = self.periode_fin.strftime("%d %B %Y")
+        mois = [
+            'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+            'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'
+        ]
+        debut = f"{self.periode_debut.day:02d} {mois[self.periode_debut.month - 1]} {self.periode_debut.year}"
+        fin = f"{self.periode_fin.day:02d} {mois[self.periode_fin.month - 1]} {self.periode_fin.year}"
         return f"{debut} au {fin}"
 
     def mentions_legales(self):

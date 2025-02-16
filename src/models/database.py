@@ -174,21 +174,28 @@ class Database:
         conn = self._get_connection()
         cursor = conn.cursor()
         
-        # Désactiver les contraintes de clés étrangères temporairement
-        cursor.execute('PRAGMA foreign_keys = OFF')
-        
-        # Vider les tables dans l'ordre inverse des dépendances
-        cursor.execute('DELETE FROM quittance')
-        cursor.execute('DELETE FROM locataire')
-        cursor.execute('DELETE FROM bailleur')
-        
-        # Réinitialiser les compteurs d'ID
-        cursor.execute('DELETE FROM sqlite_sequence')
-        
-        # Réactiver les contraintes de clés étrangères
-        cursor.execute('PRAGMA foreign_keys = ON')
-        
-        conn.commit()
+        try:
+            # Désactiver les contraintes de clés étrangères temporairement
+            cursor.execute('PRAGMA foreign_keys = OFF')
+            
+            # Vider les tables dans l'ordre inverse des dépendances
+            cursor.execute('DELETE FROM quittance')
+            cursor.execute('DELETE FROM locataire')
+            cursor.execute('DELETE FROM bailleur')
+            
+            # Essayer de réinitialiser les compteurs d'ID si la table existe
+            try:
+                cursor.execute('DELETE FROM sqlite_sequence')
+            except sqlite3.OperationalError:
+                pass  # Ignorer si la table n'existe pas
+            
+            # Réactiver les contraintes de clés étrangères
+            cursor.execute('PRAGMA foreign_keys = ON')
+            
+            conn.commit()
+        except Exception as e:
+            conn.rollback()
+            raise e
 
     def __enter__(self):
         return self
