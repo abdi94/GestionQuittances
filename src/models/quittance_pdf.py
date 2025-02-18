@@ -211,7 +211,8 @@ class QuittancePDF:
             os.makedirs(output_dir)
         
         # Construire le chemin complet du fichier
-        chemin_complet = os.path.join(output_dir, chemin_fichier)
+        #chemin_complet = os.path.join(output_dir, chemin_fichier) */
+        chemin_complet = chemin_fichier;
         
         # Préparer le document avec des marges ajustées
         # Réduire la marge supérieure de 2cm (72 points = 1 pouce ≈ 2.54cm)

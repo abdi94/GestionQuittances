@@ -49,7 +49,7 @@ class TestQuittancePDF(unittest.TestCase):
 
     def test_contenu_pdf(self):
         pdf = QuittancePDF(self.quittance)
-        chemin_test = "test_quittance.pdf"
+        chemin_test = "quittances/test_quittance.pdf"
         pdf.generer(chemin_test)
         
         # Vérifier que le fichier existe
@@ -70,14 +70,14 @@ class TestQuittancePDF(unittest.TestCase):
         pdf = QuittancePDF(self.quittance)
         
         for mois in range(1, 13):
-            chemin_test = f"test_quittance_{mois}.pdf"
+            chemin_test = f"quittances/test_quittance_{mois}.pdf"
             pdf.generer(chemin_test)
             self.assertTrue(os.path.exists(chemin_test))
             os.remove(chemin_test)
 
     def test_periode_location(self):
         pdf = QuittancePDF(self.quittance)
-        chemin_test = "test_quittance_periode.pdf"
+        chemin_test = "quittances/test_quittance_periode.pdf"
         pdf.generer(chemin_test)
         
         # Vérifier que le fichier existe

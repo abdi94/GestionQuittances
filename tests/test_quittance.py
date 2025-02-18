@@ -56,7 +56,7 @@ class TestQuittance(unittest.TestCase):
             )
 
     def test_numero_quittance(self):
-        self.assertEqual(self.quittance.numero, "Q202401")
+        self.assertEqual(self.quittance.numero, "202401")
 
     def test_numero_quittance_personnalise(self):
         quittance = Quittance(
@@ -64,8 +64,8 @@ class TestQuittance(unittest.TestCase):
             locataire=self.locataire,
             periode_debut=date(2024, 1, 1),
             periode_fin=date(2024, 1, 31),
-            numero="Q2024-01-CUSTOM"
+            numero="2024-01-CUSTOM"
         )
-        self.assertEqual(quittance.numero, "Q2024-01-CUSTOM")
+        self.assertEqual(quittance.numero, "2024-01-CUSTOM")
 
   
