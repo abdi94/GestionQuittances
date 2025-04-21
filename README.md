@@ -52,7 +52,7 @@ python -m venv env
 4. Activez l'environnement virtuel :
    - Sur **Windows** :
 ```shell script
-.\env\Scripts\activate
+./env/Scripts/activate
 ```
    - Sur **Linux/macOS** :
 ```shell script
