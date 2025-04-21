@@ -14,6 +14,7 @@
 - Ajouter un nouveau **locataire** en remplissant un formulaire facile à utiliser.
 - Générer automatiquement une **quittance de loyer** prête à l'utilisation.
 - Interface graphique intuitive créée avec **Tkinter**.
+- Gestion et journalisation des événements grâce au système de **log** intégré.
 
 ---
 
@@ -52,7 +53,7 @@ python -m venv env
 4. Activez l'environnement virtuel :
    - Sur **Windows** :
 ```shell script
-./env/Scripts/activate
+.\env\Scripts\activate
 ```
    - Sur **Linux/macOS** :
 ```shell script

@@ -98,7 +98,7 @@ class QuittancePDF:
 
         # Combiner le numéro de quittance et la période sur la même ligne
         story.append(Paragraph(
-            f"Quittance n° {self.quittance.numero} &nbsp;pour le mois de {mois_str} {annee}",
+            f"Quittance n° {self.quittance.numero} &nbsp;pour la période du {self.quittance.periode_str()}",
             self.styles["SousTitre"]
         ))
         story.append(Spacer(1, 20))
