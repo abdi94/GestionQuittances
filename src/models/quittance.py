@@ -43,9 +43,9 @@ class Quittance:
 
     def texte_legal(self):
         return (
-            "Je soussigné(e) {}, propriétaire du logement désigné ci-dessus, "
+            "Je soussigné(e) {}, propriétaire du logement situé au {}, "
             "déclare avoir reçu la somme de {:.2f} euros, au titre du paiement "
             "du loyer et des charges pour la période de location indiquée dans la "
             "présente quittance.\n\n"
             "{}"
-        ).format(self.bailleur.nom, self.montant_total(), self.mentions_legales()) 
+        ).format(self.bailleur.nom, self.locataire.adresse_complete() ,self.montant_total(), self.mentions_legales())

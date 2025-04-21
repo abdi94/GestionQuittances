@@ -14,7 +14,7 @@ class QuittancePDF:
     def __init__(self, quittance):
         self.quittance = quittance
         self.styles = getSampleStyleSheet()
-        self.signature_path = os.path.join(r'C:\Users\abdir\PycharmProjects\GestionQuittances\src', "templates", "firma2.PNG")
+        self.signature_path = os.path.join(os.getcwd(), "../templates", "firma2.PNG")
         try:
             # Essayer différentes locales pour Windows et Linux
             locales_to_try = ['fr_FR.UTF-8', 'fra_fra', 'fr_FR', 'fr']
@@ -207,7 +207,7 @@ class QuittancePDF:
     def generer(self, chemin_fichier):
         """Génère le PDF de la quittance"""
         # Créer le répertoire de sortie s'il n'existe pas
-        output_dir = r'C:\Users\abdir\PycharmProjects\GestionQuittances\quittances\\'
+        output_dir = os.getcwd()+'\\quittances\\'
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
