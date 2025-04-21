@@ -14,7 +14,6 @@
 - Ajouter un nouveau **locataire** en remplissant un formulaire facile à utiliser.
 - Générer automatiquement une **quittance de loyer** prête à l'utilisation.
 - Interface graphique intuitive créée avec **Tkinter**.
-- Gestion et journalisation des événements grâce au système de **log** intégré.
 
 ---
 
